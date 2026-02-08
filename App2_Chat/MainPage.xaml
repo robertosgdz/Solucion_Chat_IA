@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App2_Chat.MainPage"
+             Title="Chat WhatsApp Style"
+             BackgroundColor="#ECE5DD">
+    <!-- OJO: En App2 cambia x:Class a App2_Chat.MainPage y el Title -->
+
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+
+        <!-- 1. Cabecera Estilo WhatsApp -->
+        <Grid Grid.Row="0" BackgroundColor="#075E54" Padding="15,10" ColumnDefinitions="*,Auto,Auto">
+
+            <!-- Estado e Icono -->
+            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                <Frame HeightRequest="40" WidthRequest="40" CornerRadius="20" Padding="0" IsClippedToBounds="True" BorderColor="White">
+                    <Image Source="dotnet_bot.png" Aspect="AspectFill" BackgroundColor="#128C7E"/>
+                    <!-- Puedes poner una foto real si tienes, si no sale el robot por defecto -->
+                </Frame>
+                <VerticalStackLayout Spacing="0" VerticalOptions="Center">
+                    <Label Text="IA Remota" TextColor="White" FontAttributes="Bold" FontSize="16"/>
+                    <Label x:Name="LblStatus" Text="Desconectado" TextColor="#FFCDD2" FontSize="12"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <!-- Botones de Acción (Config y Conexión) -->
+            <HorizontalStackLayout Grid.Column="1" Spacing="15" VerticalOptions="Center" Margin="10,0">
+
+                <!-- Switch de Voz Mejorado -->
+                <Border Stroke="White" StrokeThickness="1" StrokeShape="RoundRectangle 15" 
+        Padding="8,2" BackgroundColor="Transparent" VerticalOptions="Center">
+                    <HorizontalStackLayout Spacing="5">
+                        <Label Text="🔊" TextColor="White" VerticalOptions="Center" FontSize="14"/>
+                        <Switch x:Name="SwVoz" IsToggled="False" OnColor="#25D366" ThumbColor="White" Scale="0.7" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+
+
+                <!-- Config -->
+                <ImageButton Source="{FontImage Glyph='⚙', Color=White, Size=25}" 
+                             Clicked="OnConfigClicked" BackgroundColor="Transparent"/>
+
+                <!-- Conectar (Play) -->
+                <ImageButton x:Name="BtnConnect" Source="{FontImage Glyph='▶', Color=White, Size=25}" 
+                             Clicked="OnConnectClicked" BackgroundColor="Transparent"/>
+
+                <!-- Parar (Stop) -->
+                <ImageButton x:Name="BtnDisconnect" Source="{FontImage Glyph='⏹', Color=Red, Size=25}" 
+                             Clicked="OnDisconnectClicked" BackgroundColor="Transparent" IsEnabled="False" Opacity="0.5"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- 2. Área de Chat (Fondo) -->
+        <ScrollView Grid.Row="1" x:Name="ChatScroll" Padding="10">
+            <VerticalStackLayout x:Name="ChatContainer" Spacing="8">
+                <!-- Aquí van las burbujas -->
+                <Label Text="🔒 Los mensajes están cifrados de extremo a extremo." 
+                       FontSize="10" TextColor="#555" HorizontalOptions="Center" 
+                       BackgroundColor="#DDF3C8" Padding="8,4" Margin="0,10"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 3. Barra de Input (Pie de página) -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Padding="10,5" BackgroundColor="Transparent">
+            <!-- Caja de Texto Redondeada -->
+            <Frame Grid.Column="0" CornerRadius="25" Padding="15,0" BackgroundColor="White" BorderColor="Transparent" HasShadow="False" HeightRequest="50">
+                <Entry x:Name="EntMessage" Placeholder="Escribe un mensaje" VerticalOptions="Center" ReturnType="Send" Completed="OnSendClicked"/>
+            </Frame>
+
+            <!-- Botón Enviar Flotante -->
+            <Frame Grid.Column="1" CornerRadius="25" HeightRequest="50" WidthRequest="50" Padding="0" BackgroundColor="#00897B" Margin="5,0,0,0" HasShadow="True">
+                <ImageButton Source="{FontImage Glyph='➤', Color=White, Size=20}" 
+                             Clicked="OnSendClicked" BackgroundColor="Transparent" VerticalOptions="Center" HorizontalOptions="Center"/>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSendClicked"/>
+                </Frame.GestureRecognizers>
+            </Frame>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
