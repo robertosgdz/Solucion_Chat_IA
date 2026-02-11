@@ -59,6 +59,25 @@ public partial class MainPage : ContentPage
             // 1. Mostrar mensaje recibido (Izquierda - Blanco)
             AddChatBubble(message, false);
 
+            // --- NUEVO: TEXTO A VOZ (Ahora lee lo que RECIBIMOS) ---
+            if (SwVoz.IsToggled)
+            {
+                try
+                {
+                    // Leemos el mensaje del "enemigo" antes de ponernos a pensar
+                    await TextToSpeech.Default.SpeakAsync(message, new SpeechOptions
+                    {
+                        Volume = 1.0f,
+                        Pitch = 1.0f // Voz neutra para leer lo que dice el otro (o pon 1.2f si quieres que suene agudo como el gato)
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error TextToSpeech: " + ex.Message);
+                }
+            }
+            // --------------------------------------------------------
+
             // 2. Pensar respuesta con LLM
             await ProcessLlmResponse(message);
         });
@@ -85,23 +104,7 @@ public partial class MainPage : ContentPage
         // 3. Mostrar mi respuesta (Derecha - Verde)
         AddChatBubble(response, true);
 
-        // --- NUEVO: TEXTO A VOZ ---
-        if (SwVoz.IsToggled) // Solo si el switch está activado
-        {
-            try
-            {
-                await TextToSpeech.Default.SpeakAsync(response, new SpeechOptions
-                {
-                    Volume = 1.0f,
-                    Pitch = 0.8f // Voz más GRAVE para el perro (más masculina/profunda)
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error TextToSpeech: " + ex.Message);
-            }
-        }
-        // -------------------------
+        // (Aquí hemos quitado el TextToSpeech porque ya no queremos leer nuestra propia respuesta)
 
         // 4. Enviar a RabbitMQ para que la otra app responda
         if (_isConnected)
@@ -182,8 +185,6 @@ public partial class MainPage : ContentPage
 
         try
         {
-            
-
             await _rabbitService.DisposeAsync();
             _rabbitService.OnMessageReceived -= HandleMessageReceived;
 
